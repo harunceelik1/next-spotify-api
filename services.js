@@ -2,24 +2,26 @@
 // const token = window.localStorage.getItem("token");
 export async function fetchWebApi(endpoint, method, body) {
   try {
-    return fetch(`https://api.spotify.com/${endpoint}`, {
+    const response = await fetch(`https://api.spotify.com/${endpoint}`, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
       method,
       body: JSON.stringify(body),
-    })
-      .then((resp) => resp.json())
-      .then(function (response) {
-        console.info("fetch()", response);
+    });
 
-        return response;
-      });
+    // HTTP durum kodunu kontrol et
+    if (response.status === 404) {
+      console.error("404 Hatası: Sayfa bulunamadı.");
+      return;
+    }
+
+    return response.json();
   } catch (error) {
+    console.error("fetchWebApi Hatası:", error);
     throw error;
   }
 }
-
 const getToken = () => {
   return window.localStorage.getItem("token");
 };
@@ -55,7 +57,8 @@ export const playTrack = async () => {
 
 export const getPlaylist = async () => {
   // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
-  return await fetchWebApi("v1/me/playlists", "GET");
+
+  return await fetchWebApi("v1/me/playlistls", "GET");
 };
 
 export const getLastTracks = async (limit) => {

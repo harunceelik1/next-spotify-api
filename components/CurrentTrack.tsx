@@ -6,13 +6,9 @@ import {
   previousTrack,
 } from "@/services";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-
 import React, { useEffect, useState } from "react";
-import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-import styles from "./styles.module.css";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const CurrentTrack = () => {
@@ -55,6 +51,8 @@ const CurrentTrack = () => {
   };
 
   useEffect(() => {
+    const hash = window.location.hash;
+    window.location.hash = "";
     fetchData();
     const intervalId = setInterval(() => {
       fetchData();
@@ -103,18 +101,37 @@ const CurrentTrack = () => {
                 </p>
               </div>
 
-              {/* <div className="absolute bottom-24 right-5">
-                <div className="transition opacity-0 rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
-                  {isPlaying ? (
-                    <FaPause
-                      className="text-black"
-                      onClick={handlePauseClick}
+              <div className="absolute bottom-24 right-5">
+                <div className="flex gap-x-6 opacity-0 group-hover:opacity-100">
+                  <div className="transition   flex items-center  drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110">
+                    <BiSkipPrevious
+                      onClick={handlePreviousClick}
+                      className="cursor-pointer"
+                      size={32}
                     />
-                  ) : (
-                    <FaPlay className="text-black " onClick={handlePlayClick} />
-                  )}
+                  </div>
+                  <div className="transition rounded-full cursor-pointer flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
+                    {isPlaying ? (
+                      <FaPause
+                        className="text-black cursor-pointer"
+                        onClick={handlePauseClick}
+                      />
+                    ) : (
+                      <FaPlay
+                        className="text-black cursor-pointer"
+                        onClick={handlePlayClick}
+                      />
+                    )}
+                  </div>
+                  <div className="transition   flex items-center  drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110">
+                    <BiSkipNext
+                      onClick={handleNextClick}
+                      className="cursor-pointer"
+                      size={32}
+                    />
+                  </div>
                 </div>
-              </div> */}
+              </div>
             </div>
           )
         ) : (

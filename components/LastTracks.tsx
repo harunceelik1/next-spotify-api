@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { fadeInAnimation } from "@/lib/utils";

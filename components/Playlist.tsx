@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeInAnimation } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Playlist = () => {
   const [playlist, setPlaylist] = useState<[]>([]);
+  const [loading, setLoading] = useState(false); // Ekledik
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -14,8 +17,10 @@ const Playlist = () => {
         console.log("playlistsS", playlists);
         console.log("2.useffect Playlist", playlists.items);
         setPlaylist(playlists.items);
+        setLoading(false);
       } catch (error) {
         console.error("Verileri alırken bir hata oluştu:", error);
+        setLoading(true);
       }
     };
     fetchData();
@@ -25,7 +30,8 @@ const Playlist = () => {
     <section className="mt-16 w-full">
       <h1 className="font-bold text-3xl uppercase">Playlist</h1>
       <div className="lg:grid-cols-5   md:grid-cols-4 sm:grid-cols-3 grid-cols-2  pt-8  gap-x-8  max-sm:gap-y-4 gap-y-4  grid">
-        {playlist &&
+        {playlist && playlist.length > 0 ? (
+          playlist &&
           playlist.map((track: any, index) => (
             <motion.div
               whileHover={{ scale: 1.1, originX: 0 }}
@@ -67,7 +73,19 @@ const Playlist = () => {
          </div>
        </div> */}
             </motion.div>
-          ))}
+          ))
+        ) : (
+          <Skeleton>
+            <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10 transition p-3">
+              <div className="relative aspect-square w-full h-full rounded-md overflow-hidden"></div>
+              <div className="flex flex-col items-start w-full pt-4 gap-y-1">
+                <div className="flex flex-col items-start w-full pt-4  gap-y-1">
+                  <Skeleton className="font-semibold truncate dark:bg-neutral-500/5 bg-neutral-700/20 p-2 w-full text-start"></Skeleton>
+                </div>
+              </div>
+            </div>
+          </Skeleton>
+        )}
       </div>
     </section>
   );

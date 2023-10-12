@@ -16,10 +16,10 @@ import RecommendTrack from "@/components/RecommendTrack";
 export default function Home() {
   const [token, setToken] = useState<string | null>(""); // Başlangıç değeri olarak null verildi
   const [userData, setUserData] = useState<any>(null); // Kullanıcı bilgilerini saklamak için bir state
-
+  const router = useRouter();
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const CLIENT_ID = "7d6ceec2821d4bfd934dde5f047a6546";
-  const REDIRECT_URI = "http://localhost:3000"; // Spotify Developer Dashboard'da ayarladığınız geri yönlendirme URI
+
+  const REDIRECT_URI = "http://localhost:3000/"; // Spotify Developer Dashboard'da ayarladığınız geri yönlendirme URI
   const SCOPE =
     "playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
 
@@ -41,6 +41,7 @@ export default function Home() {
 
   useEffect(() => {
     if (token) {
+      router.push("/");
       try {
         getUserData().then((response: any) => {
           setUserData(response);
@@ -58,21 +59,17 @@ export default function Home() {
 
     window.localStorage.removeItem("token");
   };
-
   return (
     <>
-      {token ? (
-        <div className="fixed top-5 right-5">
-          <Button variant="outline" size="icon" onClick={logout}>
-            <XIcon className="h-4 w-4" />
-          </Button>
-        </div>
-      ) : (
-        ""
-      )}
-      <section className="px-20  md:px-20 py-24">
+      <section className="px-20  md:px-20 py-24 h-screen">
         {token ? (
           <>
+            <div className="fixed top-5 right-5">
+              <Button variant="outline" size="icon" onClick={logout}>
+                <XIcon className="h-4 w-4" />
+              </Button>
+            </div>
+
             <div className="flex flex-col h-[250px] gap-4 items-center">
               {userData ? (
                 <>
@@ -92,7 +89,6 @@ export default function Home() {
                   <LastTracks />
                   {/* <div className="w-full h-[0.5px] bg-gray-600 mt-8"></div> */}
                   <TopTracks />
-
                   <Playlist />
                   <RecommendTrack />
                 </>
@@ -103,24 +99,27 @@ export default function Home() {
           </>
         ) : (
           <>
-            <div className="items-center flex justify-center flex-col gap-8  ">
-              <div className="p-4 items-center flex justify-center flex-col gap-y-6">
+            <div className="items-center mx-auto flex h-full justify-center flex-col gap-8  ">
+              <div className=" items-center flex justify-center flex-col gap-y-24 sm:gap-y-12">
                 <Image
                   src={"/icons/logo-black.png"}
                   alt="logoblack"
-                  width={180}
-                  height={180}
+                  width={480}
+                  height={480}
                 />
-                <p className="w-1/2 text-center text-white font-semibold">
+                <p className="w-1/2 text-center  font-semibold sm:block hidden">
                   The purpose of this application is to provide information
                   about your recently listened songs, your most-played tracks in
                   recent times, and the song you are currently listening to.
                   Click to log in.
                 </p>
                 <Link
-                  href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
+                  href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
                 >
-                  <Button variant="outline" className="text-sm">
+                  <Button
+                    variant="outline"
+                    className="text-sm w-[250px] rounded-lg"
+                  >
                     LOGIN
                   </Button>
                 </Link>

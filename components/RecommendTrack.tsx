@@ -53,18 +53,17 @@ const RecommendTrack = () => {
     });
   };
   useEffect(() => {
-    const fetchData = () => {
-      getRecommendTracks(limit)
-        .then((data: any) => {
-          setRecommend(data.tracks);
-          //   console.log("recommend data : ", data);
-        })
-        .catch((error) => {
-          console.error("API isteği sırasında hata oluştu:", error);
-        });
-    };
-
-    fetchData();
+    // const fetchData = () => {
+    //   getRecommendTracks(limit)
+    //     .then((data: any) => {
+    //       setRecommend(data.tracks);
+    //       //   console.log("recommend data : ", data);
+    //     })
+    //     .catch((error) => {
+    //       console.error("API isteği sırasında hata oluştu:", error);
+    //     });
+    // };
+    // fetchData();
   }, [limit]);
 
   const createPlaylist = async (name: string, description: string) => {
@@ -197,7 +196,7 @@ const RecommendTrack = () => {
                 </p>
               </div>
               <div className="absolute bottom-24 right-5">
-                <div className="transition opacity-0 rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
+                <div className="transition opacity-0 rounded-full flex items-center bg-green-400 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
                   <Plus
                     className="text-black"
                     onClick={() => addToPlaylist(playlistId, track.uri)}
