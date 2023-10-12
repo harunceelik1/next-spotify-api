@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getUserData } from "@/services";
+import {getPlaylist, getUserData} from "@/services";
 import LastTracks from "@/components/LastTracks";
 import TopTracks from "@/components/TopTrack";
 import CurrentTrack from "@/components/CurrentTrack";
@@ -12,19 +12,21 @@ import { buttonVariants } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
 import Playlist from "@/components/Playlist";
 import RecommendTrack from "@/components/RecommendTrack";
+import {debug} from "util";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(""); // Başlangıç değeri olarak null verildi
   const [userData, setUserData] = useState<any>(null); // Kullanıcı bilgilerini saklamak için bir state
   const router = useRouter();
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-
+  const clientId = "26c06cf88bd44692815a33d8757ca195";
   const REDIRECT_URI = "http://localhost:3000/"; // Spotify Developer Dashboard'da ayarladığınız geri yönlendirme URI
   const SCOPE =
     "playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
 
   // const apiUrl = "https://api.spotify.com/v1/me";
 
+  const [playlists, setPlaylists] = useState([]);
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     const hash = window.location.hash;
@@ -37,6 +39,7 @@ export default function Home() {
     } else if (token) {
       setToken(token);
     }
+    getPlayLists();
   }, []);
 
   useEffect(() => {
@@ -59,6 +62,16 @@ export default function Home() {
 
     window.localStorage.removeItem("token");
   };
+
+  const getPlayLists = async (): Promise<void> => {
+    try {
+      const resp = await getPlaylist();
+      setPlaylists(resp.items);
+    } catch (e) {
+      console.error("Verileri alırken bir hata oluştu:", error);
+    }
+  }
+
   return (
     <>
       <section className="px-20  md:px-20 py-24 h-screen">
@@ -89,8 +102,8 @@ export default function Home() {
                   <LastTracks />
                   {/* <div className="w-full h-[0.5px] bg-gray-600 mt-8"></div> */}
                   <TopTracks />
-                  <Playlist />
-                  <RecommendTrack />
+                  <Playlist playlists={playlists}/>
+                  <RecommendTrack getPlayLists={getPlayLists}/>
                 </>
               ) : (
                 "Kullanıcı bilgileri yükleniyor..."
@@ -114,7 +127,7 @@ export default function Home() {
                   Click to log in.
                 </p>
                 <Link
-                  href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
+                  href={`${AUTH_ENDPOINT}?client_id=${clientId}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
                 >
                   <Button
                     variant="outline"

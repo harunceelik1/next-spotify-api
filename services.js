@@ -37,7 +37,7 @@ export const getTopTracks = async (limit) => {
   );
 };
 export const getCurrentTrack = async () => {
-  return await fetchWebApi("v1/me/player/currently-playing", "GET");
+  return fetchWebApi("v1/me/player/currently-playing", "GET");
 };
 export const nextTrack = async () => {
   return fetchWebApi(`v1/me/player/next`, "POST");
@@ -58,7 +58,7 @@ export const playTrack = async () => {
 export const getPlaylist = async () => {
   // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
 
-  return await fetchWebApi("v1/me/playlistls", "GET");
+  return await fetchWebApi("v1/me/playlists", "GET");
 };
 
 export const getLastTracks = async (limit) => {
@@ -68,12 +68,8 @@ export const getLastTracks = async (limit) => {
   );
 };
 const topTracksIds = [
-  "6wsqVwoiVH2kde4k4KKAFU",
-  "2E1VxbqXsK87BmyC9O3xCA",
-  "4H2KhOR9QOHHv4ttjV5Lhz",
-  "4wEQaEealhUkriqzp9cfMx",
-  "1PiyTtoNn0m4kfJWLfjHny",
-];
+  '4PhsKqMdgMEUSstTDAmMpg','6Jv7kjGkhY2fT4yuBF3aTz','36ulbeGLdspdIYSFKXIlmN','4up9HlZcvaF1bZpyGqduf8','4FqSL5KXpydcBMfbDQvvPu'
+]
 export const getRecommendTracks = async (limit) => {
   return await fetchWebApi(
     `v1/recommendations?limit=${limit}&seed_tracks=${topTracksIds.join(",")}`,
