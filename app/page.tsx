@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import {getPlaylist, getUserData} from "@/services";
+import {getLastTracksApi, getPlaylist, getRecommendTracksApi, getUserData} from "@/services";
 import LastTracks from "@/components/LastTracks";
 import TopTracks from "@/components/TopTrack";
 import CurrentTrack from "@/components/CurrentTrack";
@@ -27,6 +27,9 @@ export default function Home() {
   // const apiUrl = "https://api.spotify.com/v1/me";
 
   const [playlists, setPlaylists] = useState([]);
+  const [lastPlayedTracks, setLastPlayedTracks] = useState([]);
+  const [recommendedTracks, setRecommendedTracks] = useState([]);
+
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     const hash = window.location.hash;
@@ -68,9 +71,32 @@ export default function Home() {
       const resp = await getPlaylist();
       setPlaylists(resp.items);
     } catch (e) {
-      console.error("Verileri alırken bir hata oluştu:", error);
+      console.error("Verileri alırken bir hata oluştu (getPlaylist):", e);
     }
   }
+
+  const getLastTrack = async (limit: number = 5): Promise<void> => {
+    try {
+      const resp = await getLastTracksApi(limit);
+      setLastPlayedTracks(resp.items);
+      getRecommendedTracks(resp.items);
+    } catch (e) {
+      console.error("Verileri alırken bir hata oluştu (setLastPlayedTracks):", e);
+    }
+  }
+
+  const getRecommendedTracks = async (items, limit: number = 5): Promise<void> => {
+    try {
+      const topTracks = items ? items : lastPlayedTracks;
+      const topFifthTracks = topTracks.slice(0,5);
+      const topTrackIds = topFifthTracks.map(item=>item.track.id);
+      const resp = await getRecommendTracksApi(limit, topTrackIds);
+      setRecommendedTracks(resp.tracks);
+    } catch (e) {
+      console.error("Verileri alırken bir hata oluştu (setLastPlayedTracks):", e);
+    }
+  }
+
 
   return (
     <>
@@ -99,11 +125,13 @@ export default function Home() {
                     /> */}
 
                   <CurrentTrack />
-                  <LastTracks />
+                  <LastTracks lastTracks={lastPlayedTracks} getLastTracks={getLastTrack} />
                   {/* <div className="w-full h-[0.5px] bg-gray-600 mt-8"></div> */}
-                  <TopTracks />
+                  <TopTracks/>
                   <Playlist playlists={playlists}/>
-                  <RecommendTrack getPlayLists={getPlayLists}/>
+                  <RecommendTrack recommendedTracks={recommendedTracks}
+                                  getRecommendedTracks={getRecommendedTracks}
+                                  getPlayLists={getPlayLists}/>
                 </>
               ) : (
                 "Kullanıcı bilgileri yükleniyor..."

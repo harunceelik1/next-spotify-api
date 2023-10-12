@@ -7,12 +7,17 @@ export async function fetchWebApi(endpoint, method, body) {
         Authorization: `Bearer ${getToken()}`,
       },
       method,
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : null,
     });
 
     // HTTP durum kodunu kontrol et
     if (response.status === 404) {
       console.error("404 Hatası: Sayfa bulunamadı.");
+      return;
+    }
+
+    if (response.status === 204) {
+      console.error("204 Hatası: No Content.");
       return;
     }
 
@@ -61,16 +66,17 @@ export const getPlaylist = async () => {
   return await fetchWebApi("v1/me/playlists", "GET");
 };
 
-export const getLastTracks = async (limit) => {
+export const getLastTracksApi = async (limit) => {
   return await fetchWebApi(
     `v1/me/player/recently-played?limit=${limit}`,
     "GET"
   );
 };
+
 const topTracksIds = [
-  '4PhsKqMdgMEUSstTDAmMpg','6Jv7kjGkhY2fT4yuBF3aTz','36ulbeGLdspdIYSFKXIlmN','4up9HlZcvaF1bZpyGqduf8','4FqSL5KXpydcBMfbDQvvPu'
+  '50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G'
 ]
-export const getRecommendTracks = async (limit) => {
+export const getRecommendTracksApi = async (limit, topTracksIds) => {
   return await fetchWebApi(
     `v1/recommendations?limit=${limit}&seed_tracks=${topTracksIds.join(",")}`,
     "GET"

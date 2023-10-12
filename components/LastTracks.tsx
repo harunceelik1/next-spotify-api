@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLastTracks } from "@/services";
+import { getLastTracksApi } from "@/services";
 import Image from "next/image";
 import {
   Select,
@@ -13,26 +13,22 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { fadeInAnimation } from "@/lib/utils";
 
-const LastTracks = () => {
-  const [lastTracks, setLastTracks] = useState<any[]>([]); // Kullanıcı bilgilerini saklamak için bir state
+const LastTracks = (props: any) => {
+  const {lastTracks, getLastTracks} = props;
+
+  const [currentLastTracks, setCurrentLastTracks] = useState<any[]>([]); // Kullanıcı bilgilerini saklamak için bir state
   const [limit, setLimit] = useState("5"); // Varsayılan limit değeri
 
-  useEffect(() => {
-    if (!limit) {
-      return;
-    }
-    getLastTracks(limit)
-      .then((data: any) => {
-        setLastTracks(data.items);
-        // console.log("TOP LAST TRACK = > ", data);
-      })
-      .catch((error) => {
-        console.error("API isteği sırasında hata oluştu:", error);
-      });
-  }, [limit]);
+  useEffect(()=>{
+    setCurrentLastTracks(lastTracks);
+  },[lastTracks])
+
+  useEffect(()=>{
+    getLastTracks(limit);
+  },[limit])
 
   return (
-    <section className="pt-24 w-full   ">
+    <section className="pt-24 w-full">
       <div className="flex justify-between items-center ">
         <div className="flex flex-col">
           <h1 className={" font-bold text-3xl"}>LAST TRACKS</h1>
@@ -57,8 +53,8 @@ const LastTracks = () => {
       </div>
 
       <div className="lg:grid-cols-5 pt-8 gap-y-4 gap-x-8 sm:grid-cols-3 md:grid-cols-4  grid-cols-2 max-sm:gap-y-4  grid  ">
-        {lastTracks &&
-          lastTracks.map((t: any, index) => (
+        {currentLastTracks &&
+            currentLastTracks.map((t: any, index) => (
             <motion.div
               whileHover={{ scale: 1.1, originX: 0 }}
               transition={{ type: "tween", stiffness: 200 }}
@@ -69,7 +65,7 @@ const LastTracks = () => {
                 once: true,
               }}
               custom={index}
-              key={t.id}
+              key={index}
               className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10  p-3"
             >
               <Link href={t.track.external_urls.spotify} target="_blank">

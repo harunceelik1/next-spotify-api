@@ -1,4 +1,4 @@
-import {getRecommendTracks, fetchWebApi, addToPlaylist} from "@/services";
+import {getRecommendTracksApi, fetchWebApi, addToPlaylist} from "@/services";
 import Image from "next/image";
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
@@ -28,7 +28,7 @@ import {Input} from "./ui/input";
 import {MdPlaylistAdd} from "react-icons/md";
 
 const RecommendTrack = (props: any) => {
-    const {getPlayLists} = props;
+    const {getPlayLists, getRecommendedTracks, recommendedTracks} = props;
     const [recommend, setRecommend] = useState<[]>([]);
     const [playlistId, setPlaylistId] = useState(null); // Çalma listesi kimliğini saklamak için durum
     const [limit, setLimit] = useState("5");
@@ -36,6 +36,10 @@ const RecommendTrack = (props: any) => {
         name: "",
         description: "",
     });
+
+    useEffect(() => {
+        setRecommend(recommendedTracks)
+    }, [recommendedTracks]);
 
     const handleChange = (e: any) => {
         const {name, value} = e.target;
@@ -54,23 +58,11 @@ const RecommendTrack = (props: any) => {
             description: "",
         });
     };
-    useEffect(() => {
-        const fetchData = () => {
-            getRecommendTracks(limit)
-                .then((data: any) => {
-                    setRecommend(data.tracks);
-                    console.log("recommend data : ", data);
-                })
-                .catch((error) => {
-                    console.error("API isteği sırasında hata oluştu:", error);
-                });
-        };
-        fetchData();
-    }, [limit]);
+
 
     const createPlaylist = async (name: string, description: string) => {
         try {
-            const {id: user_id} = await fetchWebApi("v1/me", "GET");
+            const {id: user_id} = await fetchWebApi("v1/me", "GET", null);
 
             const playlist = await fetchWebApi(
                 `v1/users/${user_id}/playlists`,
@@ -90,6 +82,11 @@ const RecommendTrack = (props: any) => {
     const addTrackToPlaylist = async (playlistId: string, uri: string) => {
         await addToPlaylist(playlistId, uri);
         getPlayLists();
+    }
+
+    const onLimitChanged = (value: string) => {
+        setLimit(value)
+        getRecommendedTracks(null, value)
     }
 
     return (
@@ -156,7 +153,7 @@ const RecommendTrack = (props: any) => {
 
                 <div className="  ">
                     {" "}
-                    <Select onValueChange={(value) => setLimit(value)}>
+                    <Select onValueChange={onLimitChanged}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select"/>
                         </SelectTrigger>

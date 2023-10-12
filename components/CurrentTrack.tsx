@@ -18,20 +18,18 @@ const CurrentTrack = () => {
   const handlePauseClick = async () => {
     try {
       await pauseTrack();
+      await fetchData();
       setIsPlaying(false);
     } catch (error) {
-      setIsPlaying(false);
-
       console.error("Şarkıyı duraklatma hatası:", error);
     }
   };
   const handlePlayClick = async () => {
     try {
       await playTrack();
+      await fetchData();
       setIsPlaying(true);
     } catch (error) {
-      setIsPlaying(true);
-
       console.error("Şarkıyı oynatma hatası:", error);
     }
   };
@@ -65,11 +63,13 @@ const CurrentTrack = () => {
   const handleNextClick = async () => {
     try {
       await nextTrack();
+      await fetchData();
     } catch (error) {}
   };
   const handlePreviousClick = async () => {
     try {
       await previousTrack();
+      await fetchData();
     } catch (error) {}
   };
   return (
