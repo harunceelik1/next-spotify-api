@@ -74,8 +74,12 @@ export const getLastTracksApi = async (limit) => {
 };
 
 const topTracksIds = [
-  '50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G','50KVOLNNqft8SJr5ybrv8G'
-]
+  "50KVOLNNqft8SJr5ybrv8G",
+  "50KVOLNNqft8SJr5ybrv8G",
+  "50KVOLNNqft8SJr5ybrv8G",
+  "50KVOLNNqft8SJr5ybrv8G",
+  "50KVOLNNqft8SJr5ybrv8G",
+];
 export const getRecommendTracksApi = async (limit, topTracksIds) => {
   return await fetchWebApi(
     `v1/recommendations?limit=${limit}&seed_tracks=${topTracksIds.join(",")}`,
@@ -94,45 +98,9 @@ export async function addToPlaylist(playlistId, trackUri) {
     throw error;
   }
 }
-// export const topTracks = async (token) => {
-//   const apiUrl = "https://api.spotify.com/v1/me/player/recently-played?limit=5"; // Son 5 şarkıyı almak için limit ekledik
-
-//   try {
-//     const response = await fetch(apiUrl, {
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("API isteği başarısız oldu.");
-//     }
-
-//     const data = await response.json();
-//     return data.items; // Son 5 şarkıyı döndürüyoruz
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// export const fetchUserData = async (token) => {
-//   const apiUrl = "https://api.spotify.com/v1/me";
-
-//   try {
-//     const response = await fetch(apiUrl, {
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("API isteği başarısız oldu.");
-//     }
-
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export async function setVolumeApi(percent) {
+  return await fetchWebApi(
+    `v1/me/player/volume?volume_percent=${percent}`,
+    "PUT"
+  );
+}

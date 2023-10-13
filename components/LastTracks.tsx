@@ -8,28 +8,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { fadeInAnimation } from "@/lib/utils";
 
 const LastTracks = (props: any) => {
-  const {lastTracks, getLastTracks} = props;
+  const { lastTracks, getLastTracks } = props;
 
-  const [currentLastTracks, setCurrentLastTracks] = useState<any[]>([]); // Kullanıcı bilgilerini saklamak için bir state
+  const [currentLastTracks, setCurrentLastTracks] = useState<any[]>([]);
   const [limit, setLimit] = useState("5"); // Varsayılan limit değeri
 
-  useEffect(()=>{
+  useEffect(() => {
     setCurrentLastTracks(lastTracks);
-  },[lastTracks])
+  }, [lastTracks]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getLastTracks(limit);
-  },[limit])
+  }, [limit]);
 
   return (
     <section className="pt-24 w-full">
-      <div className="flex justify-between items-center ">
+      <div className="flex justify-between items-center gap-6 ">
         <div className="flex flex-col">
           <h1 className={" font-bold text-3xl"}>LAST TRACKS</h1>
           <p className="opacity-50 text-sm sm:block hidden">
@@ -54,7 +53,7 @@ const LastTracks = (props: any) => {
 
       <div className="lg:grid-cols-5 pt-8 gap-y-4 gap-x-8 sm:grid-cols-3 md:grid-cols-4  grid-cols-2 max-sm:gap-y-4  grid  ">
         {currentLastTracks &&
-            currentLastTracks.map((t: any, index) => (
+          currentLastTracks.map((t: any, index) => (
             <motion.div
               whileHover={{ scale: 1.1, originX: 0 }}
               transition={{ type: "tween", stiffness: 200 }}

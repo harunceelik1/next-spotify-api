@@ -30,9 +30,9 @@ const TopTracks = () => {
   }, [limit]);
   return (
     <section className="mt-16 w-full">
-      <div className="flex justify-between items-center ">
-        <div className="flex flex-col">
-          <h1 className="font-bold text-3xl">GET TRACKS</h1>
+      <div className="flex justify-between items-center gap-8 ">
+        <div className="flex flex-col ">
+          <h1 className="font-bold text-3xl">TOP TRACKS</h1>
           <p className="opacity-50 text-sm  sm:block hidden">
             {" "}
             This is the your top {limit} tracks from the last 30 days
@@ -87,10 +87,10 @@ const TopTracks = () => {
                 </p>
               </div>
               {/* <div className="absolute bottom-24 right-5">
-                <div className="transition opacity-0 rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
-                  <HiOutlineLink/>
-                </div>
-              </div> */}
+                  <div className="transition opacity-0 rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
+                    <HiOutlineLink/>
+                  </div>
+                </div> */}
             </motion.div>
           ))}
       </div>

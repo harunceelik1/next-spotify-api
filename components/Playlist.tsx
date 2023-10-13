@@ -5,31 +5,34 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeInAnimation } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MusicIcon } from "lucide-react";
 
 const Playlist = (props: any) => {
-  const {playlists} = props;
+  const { playlists } = props;
   const [currentPlaylist, setCurrentPlaylist] = useState<[]>(playlists);
 
-  useEffect(()=>{
+  useEffect(() => {
     setCurrentPlaylist(playlists);
-  },[playlists])
-
+  }, [playlists]);
 
   const renderSkeleton = () => {
-    return <Skeleton>
-      <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10 transition p-3">
-        <div className="relative aspect-square w-full h-full rounded-md overflow-hidden"></div>
-        <div className="flex flex-col items-start w-full pt-4 gap-y-1">
-          <div className="flex flex-col items-start w-full pt-4  gap-y-1">
-            <Skeleton className="font-semibold truncate dark:bg-neutral-500/5 bg-neutral-700/20 p-2 w-full text-start"></Skeleton>
+    return (
+      <Skeleton>
+        <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10 transition p-3">
+          <div className="relative aspect-square w-full h-full rounded-md overflow-hidden"></div>
+          <div className="flex flex-col items-start w-full pt-4 gap-y-1">
+            <div className="flex flex-col items-start w-full pt-4  gap-y-1">
+              <Skeleton className="font-semibold truncate dark:bg-neutral-500/5 bg-neutral-700/20 p-2 w-full text-start"></Skeleton>
+            </div>
           </div>
         </div>
-      </div>
-    </Skeleton>
-  }
+      </Skeleton>
+    );
+  };
 
   const renderPlaylistItem = (track: any, index: number) => {
-    return (<motion.div
+    return (
+      <motion.div
         whileHover={{ scale: 1.1, originX: 0 }}
         transition={{ type: "tween", stiffness: 200 }}
         variants={fadeInAnimation}
@@ -41,46 +44,47 @@ const Playlist = (props: any) => {
         custom={index}
         key={track.id}
         className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10  p-3"
-    >
-      <Link href={track.external_urls.spotify} target="_blank">
-        <div className="relative aspect-square w-full h-full rounded-md overflow-hidden">
-          <Image
-              src={track.images[0]?.url}
-              alt="currentTrack"
-              height={220}
-              width={220}
-              className="rounded-lg object-cover "
-          />
+      >
+        <Link href={track.external_urls.spotify} target="_blank">
+          <div className="relative aspect-square w-full h-full rounded-md overflow-hidden">
+            {track.images[0]?.url.length > 0 ? (
+              <Image
+                src={track.images[0]?.url}
+                alt=""
+                height={220}
+                width={220}
+                className="rounded-lg object-cover "
+              />
+            ) : (
+              <div className="  relative aspect-square w-full h-full rounded-md overflow-hidden ">
+                <Image
+                  src={"/icons/music.png"}
+                  alt=""
+                  height={220}
+                  width={220}
+                  className="rounded-lg object-cover  "
+                />
+              </div>
+            )}
+          </div>
+        </Link>
+        <div className="flex flex-col items-start w-full pt-4  gap-y-1">
+          <p className="font-semibold truncate w-full">{track.name}</p>
         </div>
-      </Link>
-      <div className="flex flex-col items-start w-full pt-4  gap-y-1">
-        <p className="font-semibold truncate w-full">{track.name}</p>
-      </div>
-      {/* <div className="absolute bottom-24 right-5">
-         <div className="transition opacity-0 rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
-           {isPlaying ? (
-             <FaPause
-               className="text-black"
-               onClick={handlePauseClick}
-             />
-           ) : (
-             <FaPlay className="text-black " onClick={handlePlayClick} />
-           )}
-         </div>
-       </div> */}
-    </motion.div>)
-  }
+      </motion.div>
+    );
+  };
 
   return (
     <section className="mt-16 w-full">
       <h1 className="font-bold text-3xl uppercase">Playlist</h1>
       <div className="lg:grid-cols-5   md:grid-cols-4 sm:grid-cols-3 grid-cols-2  pt-8  gap-x-8  max-sm:gap-y-4 gap-y-4  grid">
-        {currentPlaylist && currentPlaylist.length > 0 ? (
-            currentPlaylist &&
-            currentPlaylist.map((track: any, index) => renderPlaylistItem(track, index))
-        ) : (
-            renderSkeleton()
-        )}
+        {currentPlaylist && currentPlaylist.length > 0
+          ? currentPlaylist &&
+            currentPlaylist.map((track: any, index) =>
+              renderPlaylistItem(track, index)
+            )
+          : renderSkeleton()}
       </div>
     </section>
   );
