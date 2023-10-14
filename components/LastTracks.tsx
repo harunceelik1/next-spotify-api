@@ -19,11 +19,26 @@ const LastTracks = (props: any) => {
   const [limit, setLimit] = useState("5"); // Varsayılan limit değeri
 
   useEffect(() => {
+    console.log("LASTCOMPONENT", lastTracks);
     setCurrentLastTracks(lastTracks);
   }, [lastTracks]);
 
   useEffect(() => {
     getLastTracks(limit);
+  }, [limit]);
+
+  const fetchLastTracksPeriodically = () => {
+    getLastTracks(limit);
+  };
+
+  // Set up an interval to fetch last tracks every X milliseconds
+  useEffect(() => {
+    const intervalId = setInterval(fetchLastTracksPeriodically, 30000); // Fetch every 60 seconds (adjust the time as needed)
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [limit]);
 
   return (

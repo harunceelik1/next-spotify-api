@@ -14,11 +14,11 @@ import LastTracks from "@/components/LastTracks";
 import TopTracks from "@/components/TopTrack";
 import CurrentTrack from "@/components/CurrentTrack";
 import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
 import Playlist from "@/components/Playlist";
 import RecommendTrack from "@/components/RecommendTrack";
-import { debug } from "util";
+import { BiLogoSpotify } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(""); // Başlangıç değeri olarak null verildi
@@ -82,6 +82,7 @@ export default function Home() {
   const getLastTrack = async (limit: number = 5): Promise<void> => {
     try {
       const resp = await getLastTracksApi(limit);
+
       console.log("lastrack RESP : ", resp);
       setLastPlayedTracks(resp.items);
       getRecommendedTracks(resp.items);
@@ -128,17 +129,27 @@ export default function Home() {
             <div className="flex flex-col   h-[250px] gap-4 items-center">
               {userData ? (
                 <>
-                  <h2 className="text-6xl font-semibold text-center ">
-                    HELLO <span className="">{userData.display_name}</span>
-                  </h2>
+                  <motion.div>
+                    <BiLogoSpotify size={120} />
+                  </motion.div>
+
+                  <div className="flex flex-col gap-6">
+                    <h2 className="text-6xl font-bold text-center ">
+                      Welcome to Spotify Api
+                    </h2>
+                    <p className="text-6xl font-semibold text-center uppercase">
+                      {userData.display_name}
+                    </p>
+                  </div>
                   <p className="opacity-50">The currently playing song</p>
                   {/* <p>E-posta: {userData.email}</p> */}
                   {/* <Image
-                      src={userData.images[0].url}
-                      alt="profile"
-                      width={54}
-                      height={54}
-                    /> */}
+                    src={userData.images[0].url}
+                    alt="profile"
+                    width={54}
+                    height={54}
+                    className="rounded-full object-cover"
+                  /> */}
 
                   <CurrentTrack />
                   <LastTracks

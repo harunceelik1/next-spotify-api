@@ -31,6 +31,10 @@ const getToken = () => {
   return window.localStorage.getItem("token");
 };
 
+export const avaliableDevice = async () => {
+  return await fetchWebApi("v1/me/player/devices", "GET");
+};
+
 export const getUserData = async () => {
   return await fetchWebApi("v1/me", "GET");
 };

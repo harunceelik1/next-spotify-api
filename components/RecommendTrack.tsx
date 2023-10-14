@@ -27,6 +27,9 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { MdPlaylistAdd } from "react-icons/md";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const RecommendTrack = (props: any) => {
   const { getPlayLists, getRecommendedTracks, recommendedTracks } = props;
   const [recommend, setRecommend] = useState<[]>([]);
@@ -85,12 +88,23 @@ const RecommendTrack = (props: any) => {
           public: isPublic,
         }
       );
+
       setPlaylistId(playlist.id);
+
+      if (playlist.type === "playlist") {
+        toast.success(
+          `${playlist.name} playlist has been successfully created`
+        );
+      }
       getPlayLists();
     } catch (error) {}
   };
 
   const addTrackToPlaylist = async (playlistId: string, uri: string) => {
+    console.log("playlıstiDD", playlistId);
+    if (!playlistId) {
+      toast.error("Please Create a Playlist.");
+    }
     await addToPlaylist(playlistId, uri);
     getPlayLists();
   };
@@ -102,6 +116,7 @@ const RecommendTrack = (props: any) => {
 
   return (
     <section className="pt-24 w-full pb-12  ">
+      <ToastContainer position="top-center" /> {/* Add this line */}
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-col">
           <h1 className={" font-bold text-3xl"}>RECOMMEND TRACKS</h1>
