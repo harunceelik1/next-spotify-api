@@ -1,4 +1,3 @@
-import { getRecommendTracksApi, fetchWebApi, addToPlaylist } from "@/services";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -29,12 +28,16 @@ import { MdPlaylistAdd } from "react-icons/md";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { addToPlaylist, fetchWebApi } from "@/lib/services";
 
 const RecommendTrack = (props: any) => {
-  const { getPlayLists, getRecommendedTracks, recommendedTracks } = props;
+  const { getPlayLists, getRecommendedTracks, recommendedTracks, trackId } =
+    props;
   const [recommend, setRecommend] = useState<[]>([]);
   const [playlistId, setPlaylistId] = useState(""); // Çalma listesi kimliğini saklamak için durum
+  const [playlistName, setPlaylistName] = useState(""); // Çalma listesi kimliğini saklamak için durum
   const [limit, setLimit] = useState("5");
+
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -43,6 +46,7 @@ const RecommendTrack = (props: any) => {
 
   useEffect(() => {
     setRecommend(recommendedTracks);
+    console.log("RECOMMEND", recommendedTracks);
   }, [recommendedTracks]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,29 +92,49 @@ const RecommendTrack = (props: any) => {
           public: isPublic,
         }
       );
-
       setPlaylistId(playlist.id);
-
+      setPlaylistName(playlist.name);
       if (playlist.type === "playlist") {
         toast.success(
-          `${playlist.name} playlist has been successfully created`
+          `${playlist.name}   playlist has been successfully created`
         );
       }
       getPlayLists();
     } catch (error) {}
   };
+  const addTrackToast = (images: string) => {
+    return (
+      <div className="flex gap-2">
+        {" "}
+        <Image src={images} width={36} alt="src" height={36} />
+        <p>
+          Added to <span className="font-bold">{playlistName}</span> playlist
+        </p>
+      </div>
+    );
+  };
 
-  const addTrackToPlaylist = async (playlistId: string, uri: string) => {
-    console.log("playlıstiDD", playlistId);
-    if (!playlistId) {
-      toast.error("Please Create a Playlist.");
-    }
-    await addToPlaylist(playlistId, uri);
+  const addTrackToPlaylist = async (
+    playlistId: string,
+    uri: string,
+    images: string
+  ) => {
+    // console.log("playlıstiDD", playlistId);
+    const data = playlistId ? playlistId : trackId;
+    try {
+      console.log(data);
+      if (data === null) {
+        toast.error("Please create a playlist");
+      }
+      await addToPlaylist(data, uri);
+      toast.success(addTrackToast(images));
+    } catch (error) {}
     getPlayLists();
   };
 
   const onLimitChanged = (value: string) => {
     setLimit(value);
+    console.log("ONLİMİT CHANGED", value);
     getRecommendedTracks(null, value);
   };
 
@@ -241,7 +265,13 @@ const RecommendTrack = (props: any) => {
                 <div className="transition opacity-0 rounded-full flex items-center bg-green-400 p-3 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ">
                   <Plus
                     className="text-black"
-                    onClick={() => addTrackToPlaylist(playlistId, track.uri)}
+                    onClick={() =>
+                      addTrackToPlaylist(
+                        playlistId,
+                        track.uri,
+                        track.album.images[0].url
+                      )
+                    }
                   />
                 </div>
               </div>

@@ -6,22 +6,20 @@ import {
   playTrack,
   previousTrack,
   setVolumeApi,
-} from "@/services";
+} from "@/lib/services";
 import Image from "next/image";
-import React, { FormEvent, useEffect, useState } from "react";
-import { FaPlay, FaPause } from "react-icons/fa";
-import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import React, { useEffect, useState } from "react";
+
 import { Skeleton } from "@/components/ui/skeleton";
-import { Slider } from "./ui/slider";
 import { Monitor, Smartphone, SpeakerIcon, Volume2Icon } from "lucide-react";
 import TrackBar from "./TrackBar";
-
+import { AiOutlineDisconnect } from "react-icons/ai";
 const CurrentTrack = () => {
   const [current, setCurrent] = useState<any>({}); // initial state'i boş bir nesne olarak ayarlayın
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [volumeUp, setVolumeUp] = useState<number>(0);
   const [device, setDevice] = useState<string>("");
   const [app, setApp] = useState<boolean>(false);
+  const [episode, setEpisode] = useState<string>("");
 
   const handlePauseClick = async () => {
     try {
@@ -54,10 +52,12 @@ const CurrentTrack = () => {
           error
         );
       });
+
     getCurrentTrack()
       .then((data: any) => {
         setCurrent(data.item);
-        console.log(data);
+        console.log("CURRENTAPİ", data.item);
+        setEpisode(data.currently_playing_type);
         setIsPlaying(data.is_playing);
         setApp(false);
       })
@@ -69,11 +69,7 @@ const CurrentTrack = () => {
         setApp(true);
       });
   };
-  const [volume, setVolume] = useState<number>(33); // Varsayılan ses seviyesi
 
-  const handleChange = (e: number[]) => {
-    setVolumeApi(e);
-  };
   useEffect(() => {
     const hash = window.location.hash;
     window.location.hash = "";
@@ -110,8 +106,9 @@ const CurrentTrack = () => {
   const renderCurrentTrack = () => {
     return app ? (
       <div>
-        <p className="uppercase h-[220px] flex justify-center w-[220px] text-center items-center">
-          Spotify is not open. Please open the application
+        <p className="uppercase gap-2 h-[220px] animate-pulse flex justify-center w-[220px] text-center items-center">
+          <AiOutlineDisconnect size={24} className="" />
+          Device not found
         </p>
       </div>
     ) : (
@@ -142,8 +139,9 @@ const CurrentTrack = () => {
   const renderSkeleton = () => {
     return app ? (
       <div>
-        <p className="uppercase h-[220px] flex justify-center w-[220px] text-center items-center">
-          Spotify is not open. Please open the application
+        <p className="uppercase h-[220px] gap-2 animate-pulse flex justify-center w-[220px] text-center items-center">
+          <AiOutlineDisconnect size={24} />
+          Device not found
         </p>
       </div>
     ) : (

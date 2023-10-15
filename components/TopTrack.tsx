@@ -1,4 +1,4 @@
-import { getTopTracks } from "@/services";
+import { getTopTracks } from "@/lib/services";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -21,6 +21,7 @@ const TopTracks = () => {
     const fetchData = async () => {
       try {
         const topTrack = await getTopTracks(limit);
+        console.log("TOPTRACK", topTrack.items);
         setTopTracks(topTrack.items);
       } catch (error) {
         console.error("Verileri alırken bir hata oluştu:", error);

@@ -1,6 +1,9 @@
 // api.js
 // const token = window.localStorage.getItem("token");
-export async function fetchWebApi(endpoint, method, body) {
+
+import { PlaylistData, UserData, LastTrackData } from "./module";
+
+export async function fetchWebApi(endpoint: string, method: string, body: any) {
   try {
     const response = await fetch(`https://api.spotify.com/${endpoint}`, {
       headers: {
@@ -32,79 +35,79 @@ const getToken = () => {
 };
 
 export const avaliableDevice = async () => {
-  return await fetchWebApi("v1/me/player/devices", "GET");
+  return await fetchWebApi("v1/me/player/devices", "GET", null);
 };
 
-export const getUserData = async () => {
-  return await fetchWebApi("v1/me", "GET");
+export const getUserData = async (): Promise<UserData> => {
+  return await fetchWebApi("v1/me", "GET", null);
 };
 
-export const getTopTracks = async (limit) => {
+export const getTopTracks = async (limit: string) => {
   return await fetchWebApi(
     `v1/me/top/tracks?time_range=short_term&limit=${limit}`,
-    "GET"
+    "GET",
+    null
   );
 };
+
 export const getCurrentTrack = async () => {
-  return fetchWebApi("v1/me/player/currently-playing", "GET");
+  return fetchWebApi("v1/me/player/currently-playing", "GET", null);
 };
 export const nextTrack = async () => {
-  return fetchWebApi(`v1/me/player/next`, "POST");
+  return fetchWebApi(`v1/me/player/next`, "POST", null);
 };
 export const previousTrack = async () => {
-  return fetchWebApi(`v1/me/player/previous`, "POST");
+  return fetchWebApi(`v1/me/player/previous`, "POST", null);
 };
 
 export const pauseTrack = async () => {
-  return await fetchWebApi(`v1/me/player/pause`, "PUT");
+  return await fetchWebApi(`v1/me/player/pause`, "PUT", null);
 };
 export const playTrack = async () => {
-  // const play = fetchWebApi(`v1/me/player/play`, "PUT");
-  // console.log("Services Play", play);
-  return await fetchWebApi(`v1/me/player/play`, "PUT");
+  return await fetchWebApi(`v1/me/player/play`, "PUT", null);
 };
 
-export const getPlaylist = async () => {
-  // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
-
-  return await fetchWebApi("v1/me/playlists", "GET");
+export const getPlaylist = async (): Promise<{ items: PlaylistData[] }> => {
+  return await fetchWebApi("v1/me/playlists", "GET", null);
 };
 
-export const getLastTracksApi = async (limit) => {
+export const getLastTracksApi = async (
+  limit: number
+): Promise<{ items: LastTrackData[] }> => {
   return await fetchWebApi(
     `v1/me/player/recently-played?limit=${limit}`,
-    "GET"
+    "GET",
+    null
   );
 };
 
-const topTracksIds = [
-  "50KVOLNNqft8SJr5ybrv8G",
-  "50KVOLNNqft8SJr5ybrv8G",
-  "50KVOLNNqft8SJr5ybrv8G",
-  "50KVOLNNqft8SJr5ybrv8G",
-  "50KVOLNNqft8SJr5ybrv8G",
-];
-export const getRecommendTracksApi = async (limit, topTracksIds) => {
+export const getRecommendTracksApi = async (
+  limit: number,
+  topTracksIds: []
+) => {
   return await fetchWebApi(
     `v1/recommendations?limit=${limit}&seed_tracks=${topTracksIds.join(",")}`,
-    "GET"
+    "GET",
+    null
   );
 };
 
-export async function addToPlaylist(playlistId, trackUri) {
+export async function addToPlaylist(playlistId: string, trackUri: string) {
   try {
     await fetchWebApi(
       `v1/playlists/${playlistId}/tracks?uris=${trackUri}`,
-      "POST"
+      "POST",
+      null
     );
   } catch (error) {
     console.error("Şarkı eklenirken hata oluştu.", error);
     throw error;
   }
 }
-export async function setVolumeApi(percent) {
+export async function setVolumeApi(percent: number) {
   return await fetchWebApi(
     `v1/me/player/volume?volume_percent=${percent}`,
-    "PUT"
+    "PUT",
+    null
   );
 }

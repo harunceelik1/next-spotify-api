@@ -3,13 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  fetchWebApi,
-  getLastTracksApi,
-  getPlaylist,
-  getRecommendTracksApi,
-  getUserData,
-} from "@/services";
+
 import LastTracks from "@/components/LastTracks";
 import TopTracks from "@/components/TopTrack";
 import CurrentTrack from "@/components/CurrentTrack";
@@ -19,18 +13,27 @@ import Playlist from "@/components/Playlist";
 import RecommendTrack from "@/components/RecommendTrack";
 import { BiLogoSpotify } from "react-icons/bi";
 import { motion } from "framer-motion";
+import { LastTrackData, PlaylistData, UserData } from "@/lib/module";
+import {
+  getLastTracksApi,
+  getPlaylist,
+  getRecommendTracksApi,
+  getUserData,
+} from "@/lib/services";
 
 export default function Home() {
-  const [token, setToken] = useState<string | null>(""); // Başlangıç değeri olarak null verildi
-  const [userData, setUserData] = useState<any>(null); // Kullanıcı bilgilerini saklamak için bir state
+  const [token, setToken] = useState<string | null>("");
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [lastPlayedTracks, setLastPlayedTracks] = useState<LastTrackData[]>([]);
+  const [trackId, setTrackId] = useState<string>("");
   const router = useRouter();
+
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const REDIRECT_URI = "http://localhost:3000/";
   const SCOPE =
     " user-modify-playback-state  playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
 
-  const [playlists, setPlaylists] = useState([]);
-  const [lastPlayedTracks, setLastPlayedTracks] = useState([]);
+  const [playlists, setPlaylists] = useState<PlaylistData[]>([]);
   const [recommendedTracks, setRecommendedTracks] = useState([]);
 
   useEffect(() => {
@@ -72,7 +75,8 @@ export default function Home() {
   const getPlayLists = async (): Promise<void> => {
     try {
       const resp = await getPlaylist();
-      console.log("playlistresp", resp);
+      console.log("playlistresp", resp.items[0].id);
+      setTrackId(resp.items[0].id);
       setPlaylists(resp.items);
     } catch (e) {
       console.error("Verileri alırken bir hata oluştu (getPlaylist):", e);
@@ -83,7 +87,6 @@ export default function Home() {
     try {
       const resp = await getLastTracksApi(limit);
 
-      console.log("lastrack RESP : ", resp);
       setLastPlayedTracks(resp.items);
       getRecommendedTracks(resp.items);
     } catch (e) {
@@ -102,10 +105,8 @@ export default function Home() {
       const topTracks = items ? items : lastPlayedTracks;
       const topFifthTracks = topTracks.slice(0, 5);
       const topTrackIds = topFifthTracks.map((item: any) => item.track.id);
-      console.log("toptrackID", topTrackIds);
 
       const resp = await getRecommendTracksApi(limit, topTrackIds);
-      console.log("RECCresp.track", resp.tracks);
       setRecommendedTracks(resp.tracks);
     } catch (e) {
       console.error(
@@ -162,6 +163,7 @@ export default function Home() {
                   <RecommendTrack
                     recommendedTracks={recommendedTracks}
                     getRecommendedTracks={getRecommendedTracks}
+                    trackId={trackId}
                     getPlayLists={getPlayLists}
                   />
                 </>

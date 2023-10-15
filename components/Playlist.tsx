@@ -1,4 +1,4 @@
-import { getPlaylist } from "@/services";
+import { getPlaylist } from "@/lib/services";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -6,13 +6,16 @@ import { motion } from "framer-motion";
 import { fadeInAnimation } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MusicIcon } from "lucide-react";
+import { PlaylistData } from "@/lib/module";
 
-const Playlist = (props: any) => {
+const Playlist = (props: { playlists: PlaylistData[] }) => {
   const { playlists } = props;
-  const [currentPlaylist, setCurrentPlaylist] = useState<[]>(playlists);
+  const [currentPlaylist, setCurrentPlaylist] =
+    useState<PlaylistData[]>(playlists);
 
   useEffect(() => {
     setCurrentPlaylist(playlists);
+    console.log("PLAYLİST", playlists);
   }, [playlists]);
 
   const renderSkeleton = () => {
@@ -30,7 +33,7 @@ const Playlist = (props: any) => {
     );
   };
 
-  const renderPlaylistItem = (track: any, index: number) => {
+  const renderPlaylistItem = (track: PlaylistData, index: number) => {
     return (
       <motion.div
         whileHover={{ scale: 1.1, originX: 0 }}
@@ -81,7 +84,7 @@ const Playlist = (props: any) => {
       <div className="lg:grid-cols-5   md:grid-cols-4 sm:grid-cols-3 grid-cols-2  pt-8  gap-x-8  max-sm:gap-y-4 gap-y-4  grid">
         {currentPlaylist && currentPlaylist.length > 0
           ? currentPlaylist &&
-            currentPlaylist.map((track: any, index) =>
+            currentPlaylist.map((track: PlaylistData, index) =>
               renderPlaylistItem(track, index)
             )
           : renderSkeleton()}
