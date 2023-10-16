@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
+
 
 import LastTracks from "@/components/LastTracks";
 import TopTracks from "@/components/TopTrack";
@@ -20,6 +19,7 @@ import {
   getRecommendTracksApi,
   getUserData,
 } from "@/lib/services";
+import LoginBtn from "@/components/LoginBtn";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>("");
@@ -28,13 +28,9 @@ export default function Home() {
   const [trackId, setTrackId] = useState<string>("");
   const router = useRouter();
 
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const REDIRECT_URI = "http://localhost:3000/";
-  const SCOPE =
-    " user-modify-playback-state  playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
-
   const [playlists, setPlaylists] = useState<PlaylistData[]>([]);
   const [recommendedTracks, setRecommendedTracks] = useState([]);
+
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -86,7 +82,6 @@ export default function Home() {
   const getLastTrack = async (limit: number = 5): Promise<void> => {
     try {
       const resp = await getLastTracksApi(limit);
-
       setLastPlayedTracks(resp.items);
       getRecommendedTracks(resp.items);
     } catch (e) {
@@ -174,32 +169,7 @@ export default function Home() {
           </>
         ) : (
           <>
-            <div className="items-center mx-auto flex h-full justify-center flex-col gap-8  ">
-              <div className=" items-center flex justify-center flex-col gap-y-24 sm:gap-y-12">
-                <Image
-                  src={"/icons/logo-black.png"}
-                  alt="logoblack"
-                  width={480}
-                  height={480}
-                />
-                <p className="w-1/2 text-center  font-semibold sm:block hidden">
-                  The purpose of this application is to provide information
-                  about your recently listened songs, your most-played tracks in
-                  recent times, and the song you are currently listening to.
-                  Click to log in.
-                </p>
-                <Link
-                  href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
-                >
-                  <Button
-                    variant="outline"
-                    className="text-sm w-[250px] rounded-lg"
-                  >
-                    LOGIN
-                  </Button>
-                </Link>
-              </div>
-            </div>
+           <LoginBtn/>
           </>
         )}
       </section>
