@@ -53,7 +53,7 @@ const TopTracks = () => {
       <div className="lg:grid-cols-5   md:grid-cols-4 sm:grid-cols-3 grid-cols-2   pt-8  gap-x-8  max-sm:gap-y-4 gap-y-4 grid ">
         {topTracks &&
           topTracks.map((track: any, index) => (
-            <TracksComp track={track} index={index} track1={""} />
+            <TracksComp track={track} index={index} />
           ))}
       </div>
     </section>

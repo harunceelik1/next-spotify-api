@@ -6,12 +6,11 @@ import { motion } from "framer-motion";
 import { fadeInAnimation } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MusicIcon } from "lucide-react";
-import { PlaylistData } from "@/lib/module";
+import { Item } from "@/lib/model";
 
-const Playlist = (props: { playlists: PlaylistData[] }) => {
+const Playlist = (props: { playlists: Item[] }) => {
   const { playlists } = props;
-  const [currentPlaylist, setCurrentPlaylist] =
-    useState<PlaylistData[]>(playlists);
+  const [currentPlaylist, setCurrentPlaylist] = useState<Item[]>(playlists);
 
   useEffect(() => {
     setCurrentPlaylist(playlists);
@@ -33,7 +32,7 @@ const Playlist = (props: { playlists: PlaylistData[] }) => {
     );
   };
 
-  const renderPlaylistItem = (track: PlaylistData, index: number) => {
+  const renderPlaylistItem = (track: Item, index: number) => {
     return (
       <motion.div
         whileHover={{ scale: 1.1, originX: 0 }}
@@ -84,7 +83,7 @@ const Playlist = (props: { playlists: PlaylistData[] }) => {
       <div className="lg:grid-cols-5   md:grid-cols-4 sm:grid-cols-3 grid-cols-2  pt-8  gap-x-8  max-sm:gap-y-4 gap-y-4  grid">
         {currentPlaylist && currentPlaylist.length > 0
           ? currentPlaylist &&
-            currentPlaylist.map((track: PlaylistData, index) =>
+            currentPlaylist.map((track: Item, index) =>
               renderPlaylistItem(track, index)
             )
           : renderSkeleton()}

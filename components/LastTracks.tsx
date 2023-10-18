@@ -8,16 +8,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { fadeInAnimation } from "@/lib/utils";
+
 import TracksComp from "./TracksComponent";
+import { LastTrackItem } from "@/lib/model";
 
-const LastTracks = (props: any) => {
+export type LastTrackProps = {
+  lastTracks: LastTrackItem[];
+  getLastTracks: any;
+};
+const LastTracks = (props: LastTrackProps) => {
   const { lastTracks, getLastTracks } = props;
-
-  const [currentLastTracks, setCurrentLastTracks] = useState<any[]>([]);
-  const [limit, setLimit] = useState("5"); // Varsayılan limit değeri
+  const [currentLastTracks, setCurrentLastTracks] = useState<LastTrackItem[]>(
+    []
+  );
+  const [limit, setLimit] = useState<string>("5");
 
   useEffect(() => {
     console.log("LASTCOMPONENT", lastTracks);
@@ -28,15 +32,13 @@ const LastTracks = (props: any) => {
     getLastTracks(limit);
   }, [limit]);
 
-  const fetchLastTracksPeriodically = () => {
-    getLastTracks(limit);
+  const fetchLastTracksPeriodically = (): void => {
+    return getLastTracks(limit);
   };
 
-  // Set up an interval to fetch last tracks every X milliseconds
   useEffect(() => {
     const intervalId = setInterval(fetchLastTracksPeriodically, 60000); // Fetch every 60 seconds (adjust the time as needed)
 
-    // Clean up the interval when the component unmounts
     return () => {
       clearInterval(intervalId);
     };
@@ -70,7 +72,7 @@ const LastTracks = (props: any) => {
       <div className="lg:grid-cols-5 pt-8 gap-y-4 gap-x-8 sm:grid-cols-3 md:grid-cols-4  grid-cols-2 max-sm:gap-y-4  grid  ">
         {currentLastTracks &&
           currentLastTracks.map((t: any, index) => (
-            <TracksComp track={""} index={index} track1={t} />
+            <TracksComp track={t.track} index={index} />
           ))}
       </div>
     </section>

@@ -17,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
 import { Label } from "@radix-ui/react-context-menu";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -27,14 +26,22 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { addToPlaylist, fetchWebApi } from "@/lib/services";
 import RecommendedTracksList from "./RecommendTracksList";
+import { Track } from "@/lib/model";
 
-const RecommendTrack = (props: any) => {
+type RecommendTrackProps = {
+  getPlayLists: any;
+  getRecommendedTracks: any;
+  recommendedTracks: Track[];
+  trackId: string;
+};
+
+const RecommendTrack = (props: RecommendTrackProps) => {
   const { getPlayLists, getRecommendedTracks, recommendedTracks, trackId } =
     props;
-  const [recommend, setRecommend] = useState<[]>([]);
+  const [recommend, setRecommend] = useState<Track[]>([]);
   const [playlistId, setPlaylistId] = useState(""); // Çalma listesi kimliğini saklamak için durum
   const [playlistName, setPlaylistName] = useState(""); // Çalma listesi kimliğini saklamak için durum
-  const [limit, setLimit] = useState("5");
+  const [limit, setLimit] = useState<string>("5");
 
   const [form, setForm] = useState({
     name: "",
@@ -111,14 +118,16 @@ const RecommendTrack = (props: any) => {
       </div>
     );
   };
-
+  const getId = (playlistId: string): string => {
+    return playlistId ? playlistId : trackId;
+  };
   const addTrackToPlaylist = async (
     playlistId: string,
     uri: string,
     images: string
   ) => {
-    // console.log("playlıstiDD", playlistId);
-    const data = playlistId ? playlistId : trackId;
+    const data = getId(playlistId);
+
     try {
       console.log(data);
       if (data === null) {
@@ -212,7 +221,7 @@ const RecommendTrack = (props: any) => {
         </div>
         <div className="  ">
           {" "}
-          <Select onValueChange={onLimitChanged}>
+          <Select onValueChange={(value) => onLimitChanged(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select" />
             </SelectTrigger>

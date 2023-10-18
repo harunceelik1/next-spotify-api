@@ -4,13 +4,14 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeInAnimation } from "@/lib/utils";
 import { Plus } from "lucide-react";
+import { Track } from "@/lib/model";
 
 function RecommendedTracksList({
   recommend,
   addTrackToPlaylist,
   playlistId,
 }: {
-  recommend: any[];
+  recommend: Track[];
   addTrackToPlaylist: (playlistId: string, uri: string, images: string) => void;
   playlistId: string;
 }) {

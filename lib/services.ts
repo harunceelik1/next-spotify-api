@@ -1,7 +1,13 @@
 // api.js
 // const token = window.localStorage.getItem("token");
 
-import { PlaylistData, UserData, LastTrackData } from "./module";
+import {
+  LastTrackData,
+  Playlist,
+  PlaylistData,
+  RecommendTrack,
+  UserData,
+} from "./model";
 
 export async function fetchWebApi(endpoint: string, method: string, body: any) {
   try {
@@ -67,13 +73,13 @@ export const playTrack = async () => {
   return await fetchWebApi(`v1/me/player/play`, "PUT", null);
 };
 
-export const getPlaylist = async (): Promise<{ items: PlaylistData[] }> => {
+export const getPlaylist = async (): Promise<Playlist> => {
   return await fetchWebApi("v1/me/playlists", "GET", null);
 };
 
 export const getLastTracksApi = async (
   limit: number
-): Promise<{ items: LastTrackData[] }> => {
+): Promise<LastTrackData> => {
   return await fetchWebApi(
     `v1/me/player/recently-played?limit=${limit}`,
     "GET",
@@ -84,7 +90,7 @@ export const getLastTracksApi = async (
 export const getRecommendTracksApi = async (
   limit: number,
   topTracksIds: []
-) => {
+): Promise<RecommendTrack> => {
   return await fetchWebApi(
     `v1/recommendations?limit=${limit}&seed_tracks=${topTracksIds.join(",")}`,
     "GET",

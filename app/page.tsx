@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 import LastTracks from "@/components/LastTracks";
 import TopTracks from "@/components/TopTrack";
 import CurrentTrack from "@/components/CurrentTrack";
@@ -12,7 +11,13 @@ import Playlist from "@/components/Playlist";
 import RecommendTrack from "@/components/RecommendTrack";
 import { BiLogoSpotify } from "react-icons/bi";
 import { motion } from "framer-motion";
-import { LastTrackData, PlaylistData, UserData } from "@/lib/module";
+import {
+  Item,
+  LastTrackItem,
+  PlaylistData,
+  Track,
+  UserData,
+} from "@/lib/model";
 import {
   getLastTracksApi,
   getPlaylist,
@@ -24,13 +29,12 @@ import LoginBtn from "@/components/LoginBtn";
 export default function Home() {
   const [token, setToken] = useState<string | null>("");
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [lastPlayedTracks, setLastPlayedTracks] = useState<LastTrackData[]>([]);
+  const [lastPlayedTracks, setLastPlayedTracks] = useState<LastTrackItem[]>([]);
   const [trackId, setTrackId] = useState<string>("");
   const router = useRouter();
 
-  const [playlists, setPlaylists] = useState<PlaylistData[]>([]);
-  const [recommendedTracks, setRecommendedTracks] = useState([]);
-
+  const [playlists, setPlaylists] = useState<Item[]>([]);
+  const [recommendedTracks, setRecommendedTracks] = useState<Track[]>([]);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -71,7 +75,10 @@ export default function Home() {
   const getPlayLists = async (): Promise<void> => {
     try {
       const resp = await getPlaylist();
-      console.log("playlistresp", resp.items[0].id);
+
+      // resp.items[0].
+
+      // console.log("playlistresp", resp.items[0].id);
       setTrackId(resp.items[0].id);
       setPlaylists(resp.items);
     } catch (e) {
@@ -169,7 +176,7 @@ export default function Home() {
           </>
         ) : (
           <>
-           <LoginBtn/>
+            <LoginBtn />
           </>
         )}
       </section>
