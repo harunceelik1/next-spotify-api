@@ -13,9 +13,9 @@ const Navbar = () => {
   return (
     <header className="w-full">
       <nav className="flex justify-between items-center px-6 md:px-20 py-4">
-        <Link href={"/"}>
+        {/* <Link href={"/"}>
           <Image src={"/icons/logo.png"} width={120} height={120} alt="logo" />
-        </Link>
+        </Link> */}
         <div className="flex items-center gap-5">
           {/* {navIcons.map((icon, index) => (
             <Image
