@@ -53,7 +53,7 @@ export default function Home() {
 
   useEffect(() => {
     if (token) {
-      router.push("/");
+      // router.push("/");
       try {
         getUserData().then((response: any) => {
           setUserData(response);
