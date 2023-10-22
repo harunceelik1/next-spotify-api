@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 
 const LoginBtn = () => {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const REDIRECT_URI = "http://localhost:3000/";
+  const REDIRECT_URI = "https://nextspotify-api.vercel.app/";
   const SCOPE =
     " user-modify-playback-state  playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
   return (
