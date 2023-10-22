@@ -7,6 +7,7 @@ const LoginBtn = () => {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const SCOPE =
     " user-modify-playback-state  playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
+  console.log(process.env.NEXT_PUBLIC_REDIRECT_URI);
   return (
     <div className="items-center mx-auto flex h-full justify-center flex-col gap-8  ">
       <div className=" items-center flex justify-center flex-col gap-y-24 sm:gap-y-12">
@@ -22,7 +23,7 @@ const LoginBtn = () => {
           the song you are currently listening to. Click to log in.
         </p>
         <Link
-          href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
+          href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
         >
           <Button variant="outline" className="text-sm w-[250px] rounded-lg">
             LOGIN
