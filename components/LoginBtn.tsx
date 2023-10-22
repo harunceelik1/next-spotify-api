@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 
 const LoginBtn = () => {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const REDIRECT_URI = "https://nextspotify-api.vercel.app/";
   const SCOPE =
     " user-modify-playback-state  playlist-modify-public playlist-modify-private user-modify-playback-state user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-read-playback-state user-read-currently-playing"; // İhtiyaca göre kapsamı ayarlayın
   return (
@@ -23,7 +22,7 @@ const LoginBtn = () => {
           the song you are currently listening to. Click to log in.
         </p>
         <Link
-          href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
+          href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&scope=${SCOPE}&response_type=token`}
         >
           <Button variant="outline" className="text-sm w-[250px] rounded-lg">
             LOGIN
