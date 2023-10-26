@@ -25,8 +25,11 @@ import {
   getUserData,
 } from "@/lib/services";
 import LoginBtn from "@/components/LoginBtn";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Home() {
+  // const { data: session }: any = useSession();
+  // console.log("SESSSSİON", session?.user.accessToken);
   const [token, setToken] = useState<string | null>("");
   const [userData, setUserData] = useState<UserData | null>(null);
   const [lastPlayedTracks, setLastPlayedTracks] = useState<LastTrackItem[]>([]);
@@ -40,7 +43,6 @@ export default function Home() {
     const token = window.localStorage.getItem("token");
     const hash = window.location.hash;
     window.location.hash = "";
-
     if (!token && hash) {
       const tokenFromHash = hash.split("&")[0].split("=")[1];
       window.localStorage.setItem("token", tokenFromHash);
@@ -48,12 +50,14 @@ export default function Home() {
     } else if (token) {
       setToken(token);
     }
+    console.log(token);
+
     getPlayLists();
   }, []);
 
   useEffect(() => {
     if (token) {
-      // router.push("/");
+      router.push("/");
       try {
         getUserData().then((response: any) => {
           setUserData(response);
@@ -170,7 +174,9 @@ export default function Home() {
                   />
                 </>
               ) : (
-                "Kullanıcı bilgileri yükleniyor..."
+                <div>
+                  <p className="uppercase">User information loading..</p>
+                </div>
               )}
             </div>
           </>
