@@ -25,7 +25,6 @@ import {
   getUserData,
 } from "@/lib/services";
 import LoginBtn from "@/components/LoginBtn";
-import { signIn, useSession } from "next-auth/react";
 
 export default function Home() {
   // const { data: session }: any = useSession();
