@@ -1,4 +1,5 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+DEPLOYED URL https://nextspotify-api.vercel.app/ . But if you want using this application register with your spotify account to [s](https://developer.spotify.com/)
 
 ## Getting Started
 
